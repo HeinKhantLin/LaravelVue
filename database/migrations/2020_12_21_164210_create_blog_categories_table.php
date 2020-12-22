@@ -14,7 +14,9 @@ class CreateBlogCategoriesTable extends Migration
     public function up()
     {
         Schema::create('blog_categories', function (Blueprint $table) {
-            $table->id();
+            $table->uuid('id');
+            $table->uuid('blog_id');
+            $table->uuid('category_id');
             $table->timestamps();
         });
     }
