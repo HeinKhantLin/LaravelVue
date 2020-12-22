@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\Api\TagController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
@@ -16,4 +17,15 @@ use Illuminate\Support\Facades\Route;
 
 Route::middleware('auth:api')->get('/user', function (Request $request) {
     return $request->user();
+});
+//Route::get('/tags', [TestController::class, 'test']);
+Route::prefix('tags')->group(function () {
+    Route::get('/', [TagController::class, 'index']);
+    Route::post('/create', [TagController::class, 'store']);
+});
+
+Route::middleware('auth:api')->group(function () {
+    
+
+    
 });

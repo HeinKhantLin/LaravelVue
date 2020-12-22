@@ -5,103 +5,87 @@
                 <div class="container">
                     <!--~~~~~~~ TABLE ONE ~~~~~~~~~-->
                     <div class="_1adminOverveiw_table_recent _box_shadow _border_radious _mar_b30 _p20">
-                        <p class="_title0">Recent News</p>
+                        <p class="_title0">Tags <Button type="primary" size="small" @click="showModal=true"><Icon type="md-add" />Add New</Button></p>
 
                         <div class="_overflow _table_div">
                             <table class="_table">
                                     <!-- TABLE TITLE -->
                                 <tr>
-                                    <th>Date</th>
-                                    <th>Title</th>
-                                    <th>Category</th>
+                                    <th>ID</th>
+                                    <th>Tag Name</th>
+                                    <th>Created At</th>
                                     <th>Action</th>
                                 </tr>
                                     <!-- TABLE TITLE -->
 
 
                                     <!-- ITEMS -->
-                                <tr>
-                                    <td>25-05-19</td>
-                                    <td class="_table_name">Manhattan's art center "Shed" opening ceremony</td>
-                                    <td>Economy</td>
+                                <tr v-for="(tag,i) in tags" :key="i" v-if="tags.length">
+                                    <td>{{i+1}}</td>
+                                    <td class="_table_name">{{tag.tagName}}</td>
+                                    <td>{{tag.created_at}}</td>
                                     <td>
-                                        <button class="_btn _action_btn view_btn1" type="button">View</button>
-                                        <button class="_btn _action_btn edit_btn1" type="button">Edit</button>
-                                        <button class="_btn _action_btn make_btn2" type="button">Make Features</button>
-                                        <button class="_btn _action_btn make_btn3" type="button">Make Card</button>
-                                        <button class="_btn _action_btn make_btn1" type="button">Delete</button>
+                                        <Button type="info" size="small"><Icon type="md-open" />Edit</Button>
+                                        <Button type="error" size="small"><Icon type="ios-trash" />Delete</Button>
                                     </td>
                                 </tr>
                                     <!-- ITEMS -->
-
-                                    <!-- ITEMS -->
-                                <tr>
-                                    <td>25-05-19</td>
-                                    <td class="_table_name">Are Trump era is having an impact on what 's future voters</td>
-                                    <td>Social</td>
-                                    <td>
-                                        <button class="_btn _action_btn view_btn1" type="button">View</button>
-                                        <button class="_btn _action_btn edit_btn1" type="button">Edit</button>
-                                        <button class="_btn _action_btn make_btn2" type="button">Make Features</button>
-                                        <button class="_btn _action_btn make_btn3" type="button">Make Card</button>
-                                        <button class="_btn _action_btn make_btn1" type="button">Delete</button>
-                                    </td>
-                                </tr>
-                                    <!-- ITEMS -->
-
-                                            <!-- ITEMS -->
-                                <tr>
-                                    <td>25-05-19</td>
-                                    <td class="_table_name">Manhattan's art center "Shed" opening ceremony</td>
-                                    <td>Economy</td>
-                                    <td>
-                                        <button class="_btn _action_btn view_btn1" type="button">View</button>
-                                        <button class="_btn _action_btn edit_btn1" type="button">Edit</button>
-                                        <button class="_btn _action_btn make_btn2" type="button">Make Features</button>
-                                        <button class="_btn _action_btn make_btn3" type="button">Make Card</button>
-                                        <button class="_btn _action_btn make_btn1" type="button">Delete</button>
-                                    </td>
-                                </tr>
-                                    <!-- ITEMS -->
-
-                                    <!-- ITEMS -->
-                                <tr>
-                                    <td>25-05-19</td>
-                                    <td class="_table_name">Are Trump era is having an impact on what 's future voters</td>
-                                    <td>Social</td>
-                                    <td>
-                                        <button class="_btn _action_btn view_btn1" type="button">View</button>
-                                        <button class="_btn _action_btn edit_btn1" type="button">Edit</button>
-                                        <button class="_btn _action_btn make_btn2" type="button">Make Features</button>
-                                        <button class="_btn _action_btn make_btn3" type="button">Make Card</button>
-                                        <button class="_btn _action_btn make_btn1" type="button">Delete</button>
-                                    </td>
-                                </tr>
-                                    <!-- ITEMS -->
-
-                                    <!-- ITEMS -->
-                                <tr>
-                                    <td>25-05-19</td>
-                                    <td class="_table_name">Are Trump era is having an impact on what 's future voters</td>
-                                    <td>Social</td>
-                                    <td>
-                                        <button class="_btn _action_btn view_btn1" type="button">View</button>
-                                        <button class="_btn _action_btn edit_btn1" type="button">Edit</button>
-                                        <button class="_btn _action_btn make_btn2" type="button">Make Features</button>
-                                        <button class="_btn _action_btn make_btn3" type="button">Make Card</button>
-                                        <button class="_btn _action_btn make_btn1" type="button">Delete</button>
-                                    </td>
-                                </tr>
-                                    <!-- ITEMS -->
-
-
                             </table>
                         </div>
-                    </div>
-                    <Page :total="100" />
 
+                        <Modal
+                            v-model="showModal"
+                            title="Add New Tag"
+                            :maskClosable="false"
+                            >
+                            <Input v-model="data.tagName" placeholder="Enter tag name" />
+
+                            <div slot="footer">
+                                <Button type="default" @click="showModal=false">Close</Button>
+                                <Button type="primary" @click="addTags" :disabled="isAdding" :loading="isAdding">{{ isAdding ? 'Adding...' : 'Add'}}</Button>
+                            </div>
+                        </Modal>
+                    </div>
                 </div>
             </div>
         </div>
     </div>
 </template>
+
+<script>
+export default {
+
+    data(){
+        return {
+            data: {
+                tagName: '',
+            },
+            showModal: false,
+            isAdding: false,
+            tags: []
+        }
+    },
+
+    methods: {
+        async addTags(){
+            if(this.data.tagName.trim() == "") return this.error('Oops!', 'TagName is required!')
+            let res = await this.callApi('post', 'api/tags/create', this.data)
+            if(res.status == 200){
+                this.tags.push(res.data.data)
+                this.success('Great!', 'Tag is created successfully!')
+                this.showModal = false
+            }else {
+                this.error('Oops!', 'Something went wrong!')
+            }
+        }
+    },
+    async created() {
+        let res = await this.callApi('get', 'api/tags')
+        if(res.status == 200){
+            this.tags = res.data.data
+        }else{
+            this.error('Oops!', 'Something went wrong!')
+        }
+    }
+}
+</script>
