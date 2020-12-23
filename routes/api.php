@@ -22,6 +22,8 @@ Route::middleware('auth:api')->get('/user', function (Request $request) {
 Route::prefix('tags')->group(function () {
     Route::get('/', [TagController::class, 'index']);
     Route::post('/create', [TagController::class, 'store']);
+    Route::post('/edit', [TagController::class, 'update']);
+    Route::post('/delete', [TagController::class, 'destroy']);
 });
 
 Route::middleware('auth:api')->group(function () {

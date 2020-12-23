@@ -3,6 +3,8 @@
 namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
+use App\Http\Requests\TagCreateRequest;
+use App\Http\Requests\TagUpdateRequest;
 use App\Repositories\TagRepository;
 use Illuminate\Http\Request;
 
@@ -52,7 +54,7 @@ class TagController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request)
+    public function store(TagCreateRequest $request)
     {
         try {
 
@@ -100,9 +102,24 @@ class TagController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, $id)
+    public function update(TagUpdateRequest $request)
     {
-        //
+        try {
+            
+            $id = $request->id;
+            $data = $this->tagRepo->updateTag($request,$id);
+
+            return response()->json([
+                'data' => $data,
+                'msg' => 'Data updated successfully.'
+            ],200);
+
+        } catch (\Exception $e) {
+            return response()->json([
+                'data' => [],
+                'msg'  => $e->getMessage()
+            ],$e->getCode());
+        } 
     }
 
     /**
@@ -111,8 +128,24 @@ class TagController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function destroy($id)
+    public function destroy(Request $request)
     {
-        //
+        try {
+
+            $id = $request->id;
+            $data = $this->tagRepo->deleteTag($id);
+
+            return response()->json([
+                'data' => $data,
+                'msg' => 'Data deleted successfully.'
+            ],200);
+
+        } catch (\Exception $e) {
+            return response()->json([
+                'data' => [],
+                'msg'  => $e->getMessage()
+            ],$e->getCode());
+        } 
+
     }
 }

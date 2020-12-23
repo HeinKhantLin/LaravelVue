@@ -18,7 +18,17 @@ class TagRepository extends BaseRepository
     }
 
     public function createTag($data){
-        $division = $this->create($data->all());
-        return $division ?? false;
+        $tag = $this->create($data->all());
+        return $tag ?? false;
+    }
+
+    public function updateTag($data,$id){
+        $tag = $this->update($data->all(),$id);
+        return $tag ?? false;
+    }
+
+    public function deleteTag($id){
+        $tag = $this->delete($id);
+        return $tag ?? false;
     }
 }
