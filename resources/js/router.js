@@ -7,7 +7,8 @@ import firstPage from './components/pages/myFirstPage'
 import secondPage from './components/pages/mySecondPage'
 import hook from './components/pages/basic/hook'
 import home from './components/pages/home'
-import tags from './components/pages/tags'
+import tags from './admin/components/pages/tags'
+import category from './admin/components/pages/category'
 const routes = [
     {
         path: '/',
@@ -17,6 +18,11 @@ const routes = [
     {
         path: '/tags',
         component: tags
+        
+    },
+    {
+        path: '/category',
+        component: category
         
     },
     {

@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\Api\CategoryController;
 use App\Http\Controllers\Api\TagController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
@@ -26,6 +27,12 @@ Route::prefix('tags')->group(function () {
     Route::post('/delete', [TagController::class, 'destroy']);
 });
 
+Route::prefix('category')->group(function () {
+    Route::get('/', [CategoryController::class, 'index']);
+    Route::post('/create', [CategoryController::class, 'store']);
+    Route::post('/upload', [CategoryController::class, 'upload']);
+    Route::post('/img_delete', [CategoryController::class, 'deleteImage']);
+});
 Route::middleware('auth:api')->group(function () {
     
 
